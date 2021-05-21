@@ -27,7 +27,8 @@ public class Main {
                     studentList.printStudent();
                     break;
                 case 3:
-
+                    studentList.save();
+                    break;
             }
         }
     }

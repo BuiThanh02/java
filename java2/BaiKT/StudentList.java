@@ -1,6 +1,7 @@
 package BaiKT;
 
 import java.util.ArrayList;
+import java.sql.*;
 
 public class StudentList {
     private ArrayList<Student> myStudents;
@@ -35,6 +36,30 @@ public class StudentList {
                     this.myStudents.get(i).getName() + "->" +
                     this.myStudents.get(i).getAddress() + "->" +
                     this.myStudents.get(i).getPhone());
+        }
+    }
+
+    public void save(){
+        try(
+                Connection conn = DriverManager.getConnection(
+                        "jdbc:mysql://localhost:3306/students?",
+                        "root", "");
+                Statement stmt = conn.createStatement();
+        ) {
+            String insert1= "insert into students values(?,?,?,?)";
+            PreparedStatement pstmt = conn.prepareStatement(insert1);
+            int rowsInserted = 0;
+            for(int i = 0; i < this.myStudents.size(); i++){
+                pstmt.setString(1,this.myStudents.get(i).getStudentID());
+                pstmt.setString(2,this.myStudents.get(i).getName());
+                pstmt.setString(3,this.myStudents.get(i).getAddress());
+                pstmt.setString(4, this.myStudents.get(i).getPhone());
+                rowsInserted = pstmt.executeUpdate();
+            }
+            System.out.println(rowsInserted + " student inserted!");
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
     }
 }
